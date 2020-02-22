@@ -1,12 +1,15 @@
 install.packages("readr")
 library(readr)
-<<<<<<< HEAD
+library()
 
 
 TrafficCount <- read_csv("Data/Data_Level3_MWCOG_RegionalTrafficCount.csv")
 
-table(TrafficCount$COUNTY)
-=======
+
+plot <- TrafficCount %>% ggplot(aes(x=COUNTY) + geom_hist()
+plotly(plot)
+
+
 TrafficCount <- read_csv("Data/Data_Level3_MWCOG_RegionalTrafficCount.csv")
 
 TrafficCount
