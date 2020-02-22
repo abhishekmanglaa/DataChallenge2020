@@ -1,0 +1,10 @@
+Explaining Trends in DC
+
+
+```{r}
+m <- leaflet(LMO) %>% 
+  addTiles()  %>% 
+  addMarkers(lat = LMO$YCOORD , lng = LMO$XCOORD)
+m
+```
+
