@@ -59,6 +59,23 @@ m <- leaflet(LMO) %>%
   addMarkers(lat = LMO$YCOORD , lng = LMO$XCOORD)
 m
 
+DistanceStations$DIR <- TrafficCount$DIR
 
+
+
+
+<ion-icon name="car-outline"></ion-icon>
+  
+icons <- awesomeIcons(
+  icon = 'car-outline',
+  iconColor = 'black',
+  library = 'ion',
+)
+
+icons <- awesomeIcons(
+  icon = "car-outline",
+  #iconColor = 'black',
+  library = 'ion',
+)
 
 

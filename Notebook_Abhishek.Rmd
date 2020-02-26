@@ -4,8 +4,9 @@ Explaining Trends in DC
 ```{r}
 m <- leaflet(LMO) %>% 
   addTiles()  %>% 
-  addMarkers(lat = LMO$YCOORD , lng = LMO$XCOORD) %>% 
-  addCircleMarkers(lat = MetroStations$Y, lng = MetroStations$X)
+  #addMarkers(lat = LMO$YCOORD , lng = LMO$XCOORD) %>% 
+  #addCircleMarkers(lat = MetroStations$Y, lng = MetroStations$X)
+  addAwesomeMarkers(lat = LMO$YCOORD , lng = LMO$XCOORD, icon = icons)
 m
 ```
 
@@ -23,13 +24,14 @@ ggplot(ABC, aes(x = COUNTY, y = GroupedVolume/1000)) +
 ```{r}
 
 
-reg1 <- lm(TotVol~ nearest_metro_distance , data= DistanceStations)
-
-
+reg1 <- lm(TotVol~ nearest_metro_distance + DIR, data= DistanceStations)
 summary(reg1)
 
 
 
 ```
 
+```{r}
+
+```
 
