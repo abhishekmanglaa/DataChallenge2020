@@ -74,10 +74,6 @@ m
 
 DistanceStations$DIR <- TrafficCount$DIR
 
-
-
-
-<ion-icon name="car-outline"></ion-icon>
   
 icons <- awesomeIcons(
   icon = 'car-outline',
