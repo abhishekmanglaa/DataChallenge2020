@@ -1,17 +1,3 @@
-install.packages("readr")
-library(readr)
-<<<<<<< HEAD
-library()
-
-
-TrafficCount <- read_csv("Data/Data_Level3_MWCOG_RegionalTrafficCount.csv")
-
-
-plot <- TrafficCount %>% ggplot(aes(x=COUNTY) + geom_hist()
-plotly(plot)
-
-
-=======
 library(dplyr)
 library(ggplot2)
 library(rjson)
@@ -19,13 +5,18 @@ library(jsonlite)
 library(leaflet)
 library(RCurl)
 
+
+
+
 TrafficCount <- read_csv("Data/Data_Level3_MWCOG_RegionalTrafficCount.csv")
+
+plot <- TrafficCount %>% ggplot(aes(x=COUNTY)) + geom_hist()
+
 
 table(TrafficCount$COUNTY)
->>>>>>> b6708c199b31027b40c64829ee1abff8b8d49ca4
+
 TrafficCount <- read_csv("Data/Data_Level3_MWCOG_RegionalTrafficCount.csv")
 
-TrafficCount
 
 str(TrafficCount)
 

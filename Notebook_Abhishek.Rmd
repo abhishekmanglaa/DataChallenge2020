@@ -1,60 +1,97 @@
-Explaining Trends in DC
 
+Loading the required Libraries
 
 ```{r}
-m <- leaflet(LMO) %>% 
-  addTiles()  %>% 
-  #addMarkers(lat = LMO$YCOORD , lng = LMO$XCOORD) %>% 
-  #addCircleMarkers(lat = MetroStations$Y, lng = MetroStations$X)
-  addAwesomeMarkers(lat = LMO$YCOORD , lng = LMO$XCOORD, icon = icons)
-m
+library(dplyr)
+library(ggplot2)
+library(rjson)
+library(jsonlite)
+library(leaflet)
+library(RCurl)
+library(readr)
 ```
 
 
+#Choose the dataset named 'Data_Level3_MWCOG_RegionalTrafficCount.csv' under Data/
 ```{r}
-ABC <- TrafficCount %>% filter(COUNTY == "Prince George's County" & DIR =='W')
+TrafficCount <- read.csv(file.choose(), header=T)
+```
 
-ABC <- TrafficCount %>% group_by(COUNTY) %>% 
-  summarise(GroupedVolume = sum(TotVol))
 
-ggplot(ABC, aes(x = COUNTY, y = GroupedVolume/1000)) +
+#First plot for COUNTY vs TotVol
+```{r}
+plot <- TrafficCount %>% 
+  group_by(COUNTY) %>%
+  summarise(GroupedVolume = sum(TotVol)) %>%
+  ggplot(aes(x = COUNTY, y = GroupedVolume, fill = COUNTY)) + 
+  geom_bar(stat = 'identity')
+
+ggplotly(plot)
+```
+
+Adding a DIR variable from the ABPair
+
+```{r}
+TrafficCount$DIR <- substring(TrafficCount$Sta_Dir, nchar(TrafficCount$Sta_Dir))
+```
+
+Checking if there is directional traffic in PG MALL
+```{r}
+DirPlot <- TrafficCount %>% 
+  filter(COUNTY == "Prince George's County") %>%
+  group_by(DIR) %>% 
+  summarise(GroupedVolume = sum(TotVol)) %>% 
+  ggplot(aes(x = DIR, y = GroupedVolume, fill = DIR)) + 
   geom_bar(stat = "identity")
+
+ggplotly(DirPlot)
 ```
+
+We can see that there are more vehicles going in the N/S directions.
+Applying that to the whole dataset.
+```{r}
+DirPlot <- TrafficCount %>% group_by(DIR) %>% 
+  summarise(GroupedVolume  = sum(TotVol)) %>%
+  ggplot(aes(x = DIR, y = GroupedVolume, fill = DIR)) + geom_bar(stat = "identity")
+
+ggplotly(DirPlot)
+```
+
+Most of the traffic is commuting from North to south and vice versa.
 
 ```{r}
+DCTraffic <- TrafficCount %>%
+  filter(COUNTY == 'District of Columbia')
 
-
-reg1 <- lm(TotVol~ nearest_metro_distance + DIR, data= DistanceStations)
-summary(reg1)
-
-
-
+mapOne <- leaflet(DCTraffic) %>% 
+  addTiles()  %>% 
+  addMarkers(lat = DCTraffic$YCOORD , lng = DCTraffic$XCOORD, label = DCTraffic$TotVol)
+mapOne
 ```
+
+The leaflet Map shows high traffic on the borders of the county because of interstate highway traffic.
+
+Plot comparing various traffic types
+```{r}
+plot <- TrafficCount %>%
+  ggplot(aes(x = PassCars + Motorcycles, y = AllTrucks)) + geom_point()
+
+ggplotly(plot)
+```
+
+
+The leaflet Map shows high traffic on the borders of the county because of interstate highway traffic.
+
+Next Part of the analysis. How does publc transport affect the traffic in the region.
 
 ```{r}
-
-<<<<<<< HEAD
-
-
-=======
-lambdaValues <- 10^seq(-3, 3, length = 100)
- install.packages("caret")
-library("caret")
- 
- fitLasso <- train(TotVol ~ ., family='binomial', data=DistanceStations, method='glmnet', trControl=trainControl(method='cv', number=10), tuneGrid = expand.grid(alpha=1, lambda=lambdaValues))
- 
- 
-fitElasticNet <- train(TotVol ~ ., family='binomial', data= DistanceStations, method='glmnet', trControl=trainControl(method='cv', number=10), tuneLength=10)
-
-#Variable importance complete table
-varImp(fitElasticNet)$importance %>%    # Add scale=FALSE inside VarImp if you don't want to scale
-  rownames_to_column(var = "Variable") %>%
-  mutate(Importance = scales::percent(Overall/100)) %>% 
-  arrange(desc(Overall)) %>% 
-  as_tibble()
-
-#Variable importance plot with the most important variables
-plot(varImp(fitElasticNet)) 
->>>>>>> fa638de0746b5d8d9322652c1773a555279e73d6
+RegressionWithMetroLocations <- lm(TotVol~ nearest_metro_distance, data= DistanceStations)
+summary(RegressionWithMetroLocations)
 ```
+
+The regression output shows that the metro distance is inversely propotional to the traffic volume. Which suggests
+[1] Metros are located in places of high economic activity hence people commute to those places. 
+[2] Metro is not convenient for long commute.
+
+
 
