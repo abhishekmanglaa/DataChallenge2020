@@ -1,0 +1,39 @@
+Explaining Trends in DC
+
+
+```{r}
+m <- leaflet(LMO) %>% 
+  addTiles()  %>% 
+  #addMarkers(lat = LMO$YCOORD , lng = LMO$XCOORD) %>% 
+  #addCircleMarkers(lat = MetroStations$Y, lng = MetroStations$X)
+  addAwesomeMarkers(lat = LMO$YCOORD , lng = LMO$XCOORD, icon = icons)
+m
+```
+
+
+```{r}
+ABC <- TrafficCount %>% filter(COUNTY == "Prince George's County" & DIR =='W')
+
+ABC <- TrafficCount %>% group_by(COUNTY) %>% 
+  summarise(GroupedVolume = sum(TotVol))
+
+ggplot(ABC, aes(x = COUNTY, y = GroupedVolume/1000)) +
+  geom_bar(stat = "identity")
+```
+
+```{r}
+
+
+reg1 <- lm(TotVol~ nearest_metro_distance + DIR, data= DistanceStations)
+summary(reg1)
+
+
+
+```
+
+```{r}
+
+
+
+```
+
