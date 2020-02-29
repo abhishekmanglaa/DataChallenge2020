@@ -9,6 +9,7 @@ library(jsonlite)
 library(leaflet)
 library(RCurl)
 library(readr)
+library(plotly)
 ```
 
 
@@ -32,6 +33,7 @@ ggplotly(plot)
 Adding a DIR variable from the ABPair
 
 ```{r}
+TrafficCount$Sta_Dir <- as.character(TrafficCount$Sta_Dir)
 TrafficCount$DIR <- substring(TrafficCount$Sta_Dir, nchar(TrafficCount$Sta_Dir))
 ```
 
