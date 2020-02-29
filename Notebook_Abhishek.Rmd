@@ -33,5 +33,23 @@ summary(reg1)
 
 ```{r}
 
+lambdaValues <- 10^seq(-3, 3, length = 100)
+ install.packages("caret")
+library("caret")
+ 
+ fitLasso <- train(TotVol ~ ., family='binomial', data=DistanceStations, method='glmnet', trControl=trainControl(method='cv', number=10), tuneGrid = expand.grid(alpha=1, lambda=lambdaValues))
+ 
+ 
+fitElasticNet <- train(TotVol ~ ., family='binomial', data= DistanceStations, method='glmnet', trControl=trainControl(method='cv', number=10), tuneLength=10)
+
+#Variable importance complete table
+varImp(fitElasticNet)$importance %>%    # Add scale=FALSE inside VarImp if you don't want to scale
+  rownames_to_column(var = "Variable") %>%
+  mutate(Importance = scales::percent(Overall/100)) %>% 
+  arrange(desc(Overall)) %>% 
+  as_tibble()
+
+#Variable importance plot with the most important variables
+plot(varImp(fitElasticNet)) 
 ```
 
